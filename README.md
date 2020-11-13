@@ -1,6 +1,7 @@
 # 3DMapping
 
 Description of Program
+
 The zip file consists of neural network training file and testing file for the neural network.
 The map_network.py and map_network_resnet.py are used to train the neural network using data in input_b.csv and output_b.csv . After training, hdf5 file will be created. Model will be stored in _classifer.hdf5 file while weight will be stored in _weight.hdf5 file. 
 The scan_tile*.py files will be used to test neural network using the 3D point cloud data stored in .pose and .3d data.  These are the data taken in Leibnitz University.
@@ -15,8 +16,29 @@ Using 245 as thresholding value, pixel with value less than 245 will be marked w
 After all the scan file pass through the process, the png files are merged. Res*.png are merged as merged_gray_images.png. im*.png are merged as merged_images.png .
 For edge_noise reduction, padding and cropping are done using numpy.pad and numpy array function. 
 
+Installation and execution
+
+1.	Install anaconda3 if it is not installed yet
+2.	Import environment 3Dmapping using project_environment.yml
+Command: 
+conda env create -f project_environment.yml
+3.	Activate the environment
+Command:
+conda activate 3Dmapping
+4.	If wants to run training, run map_network.py (non RESNET) or map_network_resnet.py (RESNET) 
+5.	If wants to run testing on scan point files, run scan_tile*.py 
+scan_tile.py –without RESNET, without edge noise reduction
+scan_tile_bound.py - without RESNET, with edge noise reduction
+scan_tile_resnet.py –with RESNET, without edge noise reduction
+scan_tile_resnet_bound.py - with RESNET, with edge noise reduction
+scan_tile_Kmeans.py - testing program for Kmeans clustering , K=7
+
+Python Environment File
+
+project_environment.yml – Consists of anaconda3 environment and all the packages included
 
 Python Script List
+
 1.	map_network.py – training of neural network (non-RESNET)
 2.	map_network_resnet.py - training of neural network (RESNET)
 3.	scan_tile.py – testing program for pre-trained neural network (without RESNET, without edge noise reduction)
@@ -24,16 +46,23 @@ Python Script List
 5.	scan_tile_resnet.py – testing program for pre-trained neural network (with RESNET, without edge noise reduction)
 6.	scan_tile_resnet_bound.py - testing program for pre-trained neural network (with RESNET, with edge noise reduction)
 7.	scan_tile_Kmeans.py - testing program for Kmeans clustering , K=7
+
 Data File List
+
 1.	scan0XX.pose – Consists of GPS and IMU feedback (Euler angles) of vehicle at each scan.
 2.	scan0XX.3d – Consists of scan point at each scan.
 3.	input_b.csv and output_b.csv – training data of neural network. (too large in size, will be available in cloud)
+
 PNG file (Remove all PNG files when running afresh)
+
 1.	merged_images.png – colored output (red is ground, blue is object)
 2.	merged_gray_images.png – colored output (gray values)
+
 hdf5 files
+
 1.	map_network_classifier.hdf5
 2.	map_network_resnet_classifier.hdf5
 3.	map_network_weight.hdf5
 4.	map_network_resnet_weight.hdf5
+
 
