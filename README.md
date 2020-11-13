@@ -118,44 +118,47 @@ The visualization\bin folder stores the batch script for starting all of the app
 
 1. Follow the steps to setup anaconda3 environment as described at 3DMapping  "Installation and execution" section.
 2. Install the required modules below.
+
    2-1. Activate the environment
-```shell
-conda activate 3Dmapping
-```
+	```shell
+	conda activate 3Dmapping
+	```
    2-2. Install Open3d
-```shell
-conda install -c open3d-admin open3d
-```
+	```shell
+	conda install -c open3d-admin open3d
+	```
    2-3. Install pillow
-```shell
-conda install -c anaconda pillow
-```
+	```shell
+	conda install -c anaconda pillow
+	```
    2-4. Install tqdm
-```shell
-conda install -c conda-forge tqdm
-```
+	```shell
+	conda install -c conda-forge tqdm
+	```
    2-5. Install rpyc
-```shell
-conda install -c prometeia rpyc
-```
+	```shell
+	conda install -c prometeia rpyc
+	```
+	
 3. Execute all the applications.
+
    3-1. Activate the environment
-```shell
-conda activate 3Dmapping
-cd visualization\bin
-```
+	```shell
+	conda activate 3Dmapping
+	cd visualization\bin
+	```
    3-2. Start the backend service
-```shell
-start start_backend_services.bat
-```
+	```shell
+	start start_backend_services.bat
+	```
    3-3. Start the map tracking viewer
-```shell
-start start_map_viewer.bat
-```
+	```shell
+	start start_map_viewer.bat
+	```
    3-4. Start the 3D visualizer
-```shell
-start start_3d_visualizer.bat
-```
+	```shell
+	start start_3d_visualizer.bat
+	```
 
 **Files List**
 
