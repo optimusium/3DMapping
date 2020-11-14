@@ -85,12 +85,6 @@ for kk in range(0,10,1):
         #res=np.round( np.matmul(mat,posi) ).astype('int')
         res=np.round( np.matmul(mat,posi)+pos0 ).astype('int')
     
-        
-        '''
-        if np.abs(res[2]-pos0[2])<250 and np.abs(res[0]-pos0[0])<250:
-            #print("991",pos,res)
-            continue
-        '''
         #Taking out noise which gives negative value. 
         if res[1]<-5: continue
         if res[1]<0: res[1]=0
@@ -241,7 +235,7 @@ for kk in range(0,10,1):
     poi4=poi1+(3*(poi2-poi1)/4)
     poi4=poi4.astype('int')
 
-    #getting interpolation value
+    #getting interpolation value in between nearest scan point
     zz1=np.copy(zz0[:-1])
     zz1=zz1[(difxy<64)&(difz<10)]
     zz2=np.copy(zz0[1:])
@@ -254,8 +248,6 @@ for kk in range(0,10,1):
     zz4=zz1+3*(zz2-zz1)/4
     zz4=zz4.astype('int')
     
- 
-    #raise
     #--------------------------------
 
     #use map1b to interpolate value>245
@@ -266,12 +258,6 @@ for kk in range(0,10,1):
     map1b=np.copy(map1)
     map1b[map1b<246]=0
     
-
-    mas=np.copy(map1)
-    mas[mas<246]=0
-    mas[mas>0]=1
-    mas1=1-mas
-    mas=mas*map1
     
     xx,yy=np.nonzero(map1c)
 
@@ -316,7 +302,6 @@ for kk in range(0,10,1):
     #print(pos1)
 
     #interpolate low ground value last since it can consists of ground value. (note that height value is inverted here so that MaxPooling2D value can recognize the value)
-    #print("934a",pos1,xx.shape[0])
     for i in range(xx.shape[0]):
         rr, cc, val = line_aa(xx[i], yy[i], pos1[0], pos1[2])
         dist=(((xx[i]-pos1[0])**2 )+((yy[i]-pos1[2])**2 ))**0.5
@@ -356,9 +341,21 @@ for kk in range(0,10,1):
             ###############################################################################
             #backup map2 as map5. Map5 will now be a copy of sliced input map that will be used as comprison against predicted output.
             map5=np.copy(map2)
+            #remove salt noise by applying maximum filter over small area of pixel.
+            map6=np.copy(map5)
+
+            for rep in range(5):
+                map6=ndimage.maximum_filter(map6, size=2)            
+            map7=np.copy(map6)
+            for rep in range(18):
+                map6=ndimage.maximum_filter(map6, size=3)
             
-            ########################################
-            
+            #assigned into maps
+            map6[(map7>map6)&(map6[:,0]<6)]=map7[(map7>map6)&(map6[:,0]<6)]
+            map6[(map7>map6)&(map6[:,1]<6)]=map7[(map7>map6)&(map6[:,1]<6)]
+            map6[(map7>map6)&(map7[:,0]>slicesize-6)]=map7[(map7>map6)&(map7[:,0]>slicesize-6)]
+            map6[(map7>map6)&(map7[:,1]>slicesize-6)]=map7[(map7>map6)&(map7[:,1]>slicesize-6)]
+
             #Kmeans clustering using sklearn clustering, K=7
             from sklearn import cluster
             n=7
@@ -385,15 +382,13 @@ for kk in range(0,10,1):
             #value <64 are uncertainty, assign 0 value.
             im[im<64]=0
             
-            #im[map5>im]=map5[map5>im]
-            #im[ (im>230) & (map6>im) ]=map6[(im>230) & (map6>im)]
             im=im.astype('int')
             #im=fill_zero_regions(im.astype('int'))
             #save the output image in gray value for the slice
             imsave("res%i_%i.png" %(ii+startx,jj+starty), im)
 
             ###############################################################
-            #Drawing Color Map
+            #creating Color Map from array value 
             poins1,poins3=np.nonzero(im)
             poins2=np.copy(im[np.nonzero(im)])
             #print(poins1,poins2,poins3)
