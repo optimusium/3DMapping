@@ -1,10 +1,26 @@
+![](RackMultipart20201114-4-n4b5jy_html_2a32c2bc2658c81d.gif)
+
 # 3DMapping
 
-![](RackMultipart20201113-4-9safsm_html_2a32c2bc2658c81d.gif)
+![](RackMultipart20201114-4-n4b5jy_html_49ac0cb03196381.gif)
+
+**Overall Description of Program**
+
+The zip file consists of neural network training file and testing file for the neural network as well as visualization program.
+
+Hence, we divided the description into 2 parts:
+
+1. Neural Network Training and Testing
+2. Visualization of 3D map created by neural network
+
+# Part I
+
+# Neural Network Training and Testing
+
+#
+
 
 **Description of Program**
-
-The zip file consists of neural network training file and testing file for the neural network.
 
 The map\_network.py and map\_network\_resnet.py are used to train the neural network using data in input\_b.csv and output\_b.csv . After training, hdf5 file will be created. Model will be stored in \_classifer.hdf5 file while weight will be stored in \_weight.hdf5 file.
 
@@ -16,7 +32,7 @@ Preprocessing of data will be made on the x-y grid point which has multiple z va
 
 Since light or waves can still be reflected from a scan point to the sensor through the space under objects such as tree leaves, these spaces are usually maneuverable. To prevent wrong prediction of space as object at high ground, we are inverting the height values according to figure below before entering neural network. This prevent MaxPooling2D to be more sensitive with the points with higher value.
 
-![](https://github.com/optimusium/3DMapping/blob/main/scale_inversion.png)
+[![](RackMultipart20201114-4-n4b5jy_html_d36a7f0861edb57e.png)](https://github.com/optimusium/3DMapping/blob/main/scale_inversion.png)
 
 The scan point will be analyzed to determine the slice number. The scan point will be fitted into 1024x1024 slices. In scan\_tile\*.py, map1 is 2D map consists of all scan points. Map1 will be used to interpolate the grid points in between scan points and sensor position.
 
@@ -24,7 +40,7 @@ Map2 is sliced map obtained from map1. Nominalized map2 will be input into neura
 
 After prediction through neural network, the output will re-shaped back to original 1024x1024 slice size and scaled back with 256 as maximum value. The output (im in scan\_tile\*.py) will be compared against the input (in map5), the obstacle value in map5 will be retained. The output value will be stored in res\*.png (gray value).
 
-Using 245 as thresholding value, pixel with value less than 245 will be marked with blue color. Pixel with value more than 245 will be marked as red color. The value is chosen in order to fit the expected value map. The colored map will be saved as im\*.png (note that value\&lt;64 is considered to be unknown value, this is because we impose a clip at actual height of 191. After inversion, it will be reflected as 255-191=64)
+Using 245 as thresholding value, pixel with value less than 245 will be marked with blue color. Pixel with value more than 245 will be marked as red color. The value is chosen in order to fit the expected value map. The colored map will be saved as im\*.png (note that value&amp;lt;64 is considered to be unknown value, this is because we impose a clip at actual height of 191. After inversion, it will be reflected as 255-191=64)
 
 After all the scan file pass through the process, the png files are merged. Res\*.png are merged as merged\_gray\_images.png. im\*.png are merged as merged\_images.png .
 
@@ -91,33 +107,42 @@ project\_environment.yml – Consists of anaconda3 environment and all the packa
 3. map\_network\_weight.hdf5
 4. map\_network\_resnet\_weight.hdf5
 
-![](RackMultipart20201113-4-9safsm_html_2a32c2bc2658c81d.gif)
+![](RackMultipart20201114-4-n4b5jy_html_49ac0cb03196381.gif)
+
+#
 
 
-# Visualization of 3DMapping
+#
+
+
+#
+
+
+# Part II Visualization of 3D Mapping
 
 **Description of Program**
 
-The visualization source codes are included at "visualization" folder.
+The visualization source codes are stored in &quot;visualization&quot; folder.
 
-The visualization\ViewerBackendService.py starts the backend service which enable the map tracking viewer application and 3D visualizer application to exchange data.
+The visualization\ViewerBackendService.py starts the backend service which enables the map tracking viewer application and 3D visualizer application to exchange data.
 
-The visualization\TrackingViewer.py starts the map tracking viewer application. It reads the position and orientation data from visualization\view\config\tracking_tasks.txt, then sends the position and orientation data to the backend service to simulate the real data captured in the sensors. It then waits for the 3D visualizer to generate the map/front/rear view images, and retrieves the map/front/rear view images from the backend service.
+The visualization\TrackingViewer.py starts the map tracking viewer application. It reads the position and orientation data from visualization\view\config\tracking\_tasks.txt, then sends the position and orientation data to the backend service to simulate the real data captured in the sensors. It then waits for the 3D visualizer to generate the map/front/rear view images, and retrieves the map/front/rear view images from the backend service.
 
-The  visualization\Processed3dView.py starts the 3D visualizer application. It reads the visualization\data\processed\merged_gray_images_reslyr_bound.png which is generated by the scan_tile_resnet_bound.py, then constructs 3D mesh from the gray image. It will read the position and orientation data from the backend service, and generate the map/front/rear view images with 3D mesh, and send back to the backend service.
+The visualization\Processed3dView.py starts the 3D visualizer application. It reads the visualization\data\processed\merged\_gray\_images\_reslyr\_bound.png which is generated by the scan\_tile\_resnet\_bound.py, then constructs 3D mesh from the gray image. It will read the position and orientation data from the backend service, and generate the map/front/rear view images with 3D mesh, and send back to the backend service.
 
-The visualization\view\GenerateTasks.py will generate the position and orientation number to visualization\view\config\tracking_tasks.tmp.txt. The tracking_tasks.tmp.txt can then be renamed to view\config\tracking_tasks.txt so to provide the data to the map tracking viewer application.
+The visualization\view\GenerateTasks.py will generate the position and orientation number to visualization\view\config\tracking\_tasks.tmp.txt. The tracking\_tasks.tmp.txt can then be renamed to view\config\tracking\_tasks.txt so to provide the data to the map tracking viewer application.
 
-The view\config folder stores the base camera settings for various direction in "*.json". The real camera settings will be adjusted based on the base camera settings and real orientation data.
+The view\config folder stores the base camera settings for various direction in &quot;\*.json&quot;. The real camera settings will be adjusted based on the base camera settings and real orientation data.
 
 The visualization\view\images folder stores the image for the car image which is used to represent the current robot/vehicle position in the map pictures. There are other images which are used as the temporary images for map/front/rear view images. These images can be used for debugging and troubleshooting.
 
-The visualization\bin folder stores the batch script for starting all of the applicaations. The visualization\bin\start_all.bat will start all 3 application at once, but requies to be editied to start the anaconda3 environment correctly. 
+The visualization\bin folder stores the batch script that starts all the applications. The visualization\bin\start\_all.bat will start all 3 applications at once, but it is required to be edited in order to start the anaconda3 environment correctly.
 
 **Installation and execution**
 
-1. Follow the steps to setup anaconda3 environment as described at 3DMapping  "Installation and execution" section.
+1. Follow the steps to setup anaconda3 environment as described at 3DMapping &quot;Installation and execution&quot; section.
 2. Install the required modules below.
+
 
    2-1. Activate the environment
 	```shell
@@ -196,4 +221,5 @@ The visualization\bin folder stores the batch script for starting all of the app
 	front_image.png - temporary front view image
 	map_image.png - temporary map view image
 	rear_image.png - temporary rear view image
-	
+
+![](RackMultipart20201114-4-n4b5jy_html_2a32c2bc2658c81d.gif)
