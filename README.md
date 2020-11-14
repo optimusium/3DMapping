@@ -32,7 +32,7 @@ Preprocessing of data will be made on the x-y grid point which has multiple z va
 
 Since light or waves can still be reflected from a scan point to the sensor through the space under objects such as tree leaves, these spaces are usually maneuverable. To prevent wrong prediction of space as object at high ground, we are inverting the height values according to figure below before entering neural network. This prevent MaxPooling2D to be more sensitive with the points with higher value.
 
-[![](RackMultipart20201114-4-n4b5jy_html_d36a7f0861edb57e.png)](https://github.com/optimusium/3DMapping/blob/main/scale_inversion.png)
+![](https://github.com/optimusium/3DMapping/blob/main/scale_inversion.png)
 
 The scan point will be analyzed to determine the slice number. The scan point will be fitted into 1024x1024 slices. In scan\_tile\*.py, map1 is 2D map consists of all scan points. Map1 will be used to interpolate the grid points in between scan points and sensor position.
 
